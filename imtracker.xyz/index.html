@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Immigration Tracker — interactive map of Europe: asylum arrivals and estimated immigrant homicides 2025–today." />
+  <title>Immigration Tracker</title>
+  <link rel="icon" href="media/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css@v=9" />
+</head>
+<body>
+  <div class="intro-overlay" id="introOverlay" aria-hidden="true">
+    <div class="intro-stage">
+      <div class="intro-character" id="introCharacter">
+        <img
+          class="intro-knife-man"
+          src="media/meme-face-knife.png"
+          width="320"
+          height="320"
+          alt=""
+        />
+        <img
+          class="intro-speech-bubble"
+          src="media/wake-up-bubble.png"
+          width="340"
+          height="340"
+          alt="Wake up before it is too late"
+        />
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <img class="site-logo" src="media/logo.png" width="120" height="120" alt="Immigration Tracker" />
+        <div>
+          <p class="eyebrow">2025 – today</p>
+          <h1 class="visually-hidden">Immigration Tracker</h1>
+          <p class="subtitle">Click any country for asylum inflows and estimated immigrant homicides.</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="ca-box">
+          <span class="ca-text">ca: immigTWwaGRp8aAMkJQozvq2STEdRYFPjeXzVE3V6JW</span>
+        </div>
+        <div class="legend" aria-label="Map color legend">
+          <span class="legend-label">Lower</span>
+          <div class="legend-bar" role="img" aria-label="Green to red gradient"></div>
+          <span class="legend-label">Deadlier</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="countdown-banner" id="countdownPanel" aria-live="polite">
+      <div class="countdown-banner-inner">
+        <div class="countdown-digits is-hidden" id="countdownDigits" aria-hidden="true">
+          <div class="countdown-unit"><span class="countdown-num" id="cdDays">0</span><span class="countdown-lbl">days</span></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdHours">00</span><span class="countdown-lbl">hrs</span></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdMins">00</span><span class="countdown-lbl">min</span></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><span class="countdown-num" id="cdSecs">00</span><span class="countdown-lbl">sec</span></div>
+        </div>
+        <div class="countdown-banner-copy">
+          <p class="countdown-headline" id="countdownHeadline">
+            TIME UNTIL MORE THAN 50% OF — ARE IMMIGRANTS
+          </p>
+          <p class="countdown-status" id="countdownStatus">Click a country on the map</p>
+        </div>
+      </div>
+      <p class="visually-hidden" id="countdownNow"></p>
+      <p class="visually-hidden" id="countdownNote"></p>
+    </section>
+
+    <div class="layout-body">
+      <section class="map-panel" aria-label="Interactive map of Europe">
+        <div class="map-radar" aria-hidden="true"></div>
+        <div id="mapTooltip" class="map-tooltip" hidden></div>
+        <svg id="europeMap" viewBox="0 0 960 720" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Map of Europe"></svg>
+        <p class="map-hint">Scroll to zoom · drag to pan · click a country for details</p>
+      </section>
+
+      <aside class="detail-panel" id="detailPanel" aria-live="polite">
+      <div class="detail-empty" id="detailEmpty">
+        <h2>Select a country</h2>
+        <p>Countries are shaded by estimated immigrant-linked homicides per million residents (darker red = higher).</p>
+      </div>
+      <article class="detail-content" id="detailContent" hidden>
+        <h2 class="detail-country" id="countryName">—</h2>
+
+        <div class="detail-stat-row">
+          <img class="detail-meme detail-meme-float" src="media/meme-face.png" width="88" height="88" alt="" />
+          <div class="detail-stat-copy">
+            <p class="detail-label">IMMIGRANTS FROM 2025–TODAY:</p>
+            <p class="detail-value" id="statImmigrants">—</p>
+          </div>
+        </div>
+
+        <div class="detail-stat-row">
+          <img class="detail-meme detail-meme-knife detail-meme-float" src="media/meme-face-knife.png" width="88" height="88" alt="" />
+          <div class="detail-stat-copy">
+            <p class="detail-label">IMMIGRANT HOMOCIDES 2025-TODAY</p>
+            <p class="detail-value detail-value-sm" id="statImmMurders">—</p>
+            <p class="detail-deadly" id="statDeadly">—</p>
+          </div>
+        </div>
+
+        <section class="detail-case-box" id="recentCaseBox" aria-live="polite">
+          <p class="detail-label detail-label-case">HIGHLIGHTED CASE FROM THE COUNTRY</p>
+          <p class="case-loading" id="caseLoading">Searching news…</p>
+          <div class="case-content" id="caseContent" hidden>
+            <img class="case-image" id="caseImage" width="320" height="180" alt="" hidden />
+            <h3 class="case-title" id="caseTitle"></h3>
+            <p class="case-meta" id="caseMeta"></p>
+            <p class="case-snippet" id="caseSnippet"></p>
+            <a class="case-link" id="caseLink" href="index.html#" target="_blank" rel="noopener noreferrer">Read full article →</a>
+          </div>
+          <p class="case-empty" id="caseEmpty" hidden></p>
+        </section>
+
+        <p class="detail-note" id="detailNote"></p>
+      </article>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p id="disclaimerText"></p>
+    <p class="sources" id="sourcesText"></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+  <script src="data.js@v=4"></script>
+  <script src="app.js@v=8"></script>
+</body>
+</html>
