@@ -299,7 +299,7 @@
     statusEl.textContent = "Projection unavailable for this country";
   }
 
-  const maxImmigrants = d3.max(countries, (c) => c.immigrants2025) || 1;
+  const maxImmigrants = d3.max(countries, (c) => c.immigrants2026) || 1;
   const FACE_SIZE = 32;
 
   function faceCount(immigrants) {
@@ -336,12 +336,12 @@
     document.getElementById("countryName").textContent =
       row.name || ISO3_TO_NAME[iso] || iso;
 
-    document.getElementById("statImmigrants").textContent = fmt.format(row.immigrants2025);
+    document.getElementById("statImmigrants").textContent = fmt.format(row.immigrants2026);
     document.getElementById("statImmMurders").textContent = fmt.format(row.immigrantMurders);
     document.getElementById("statDeadly").innerHTML = deadlyLineHtml(row);
 
     document.getElementById("detailNote").textContent =
-      "Deadly multiplier = (immigrant homicide share) ÷ (foreign-born population share, Eurostat 2025). " +
+      "Deadly multiplier = (immigrant homicide share) ÷ (foreign-born population share, Eurostat 2026). " +
       (row.foreignBornShare != null
         ? `This country: ${row.foreignSuspectShare}% of homicides vs ${row.foreignBornShare}% foreign-born residents.`
         : "");
@@ -438,11 +438,11 @@
 
     const name = ISO3_TO_NAME[iso] || iso;
     const queries = [
-      `${name} murder 2025`,
-      `${name} stabbing killed 2025`,
-      `${name} homicide victim 2025`,
+      `${name} murder 2026`,
+      `${name} stabbing killed 2026`,
+      `${name} homicide victim 2026`,
     ];
-    if (iso === "POL") queries.push("Polska morderstwo 2025");
+    if (iso === "POL") queries.push("Polska morderstwo 2026");
     const scoreArticle = (title, snippet) => {
       if (!isAboutCountry(iso, name, title, snippet)) return -100;
       const blob = `${title} ${snippet}`.toLowerCase();
@@ -472,7 +472,7 @@
       if (/\bhomicide\b/.test(blob)) s += 5;
       if (/\bkilled\b/.test(blob)) s += 4;
       if (/\bstab/.test(blob)) s += 4;
-      if (/\b2025\b/.test(blob)) s += 4;
+      if (/\b2026\b/.test(blob)) s += 4;
       if (/\b2026\b/.test(blob)) s += 3;
       return s;
     };
@@ -496,10 +496,10 @@
     }
 
     if (best && bestScore >= 3) return best;
-    const q = encodeURIComponent(`${name} murder 2025`);
+    const q = encodeURIComponent(`${name} murder 2026`);
     return {
       ok: false,
-      error: "No major 2025–today case found in automated search",
+      error: "No major 2026–today case found in automated search",
       searchUrl: `https://news.google.com/search?q=${q}`,
     };
   }
@@ -738,7 +738,7 @@
       withData.forEach((feature) => {
         const iso = NUM_TO_ISO3[+feature.id];
         const row = byId.get(iso);
-        const n = faceCount(row.immigrants2025);
+        const n = faceCount(row.immigrants2026);
         const pts = facePositions(feature, n);
         pts.forEach(([cx, cy], i) => {
           if (Number.isFinite(cx) && Number.isFinite(cy)) {
@@ -825,12 +825,12 @@
         tooltip.innerHTML =
           "<strong>" +
           name +
-          "</strong><br/>Asylum 2025: " +
-          fmt.format(row.immigrants2025) +
+          "</strong><br/>Asylum 2026: " +
+          fmt.format(row.immigrants2026) +
           "<br/>Est. immigrant-linked homicides: " +
           fmt.format(row.immigrantMurders) +
           "<br/>Icons: " +
-          faceCount(row.immigrants2025) +
+          faceCount(row.immigrants2026) +
           " / 5";
         positionTooltip(event);
       })
